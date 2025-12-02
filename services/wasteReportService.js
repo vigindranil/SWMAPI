@@ -52,6 +52,32 @@ class WasteReportService {
       throw new Error('Failed to fetch waste report');
     }
   }
+
+  async getLocationWisePropertyWasteReport(params) {
+    const {
+      month = null,
+      year = null,
+      fromDate = null,
+      toDate = null,
+      stateID = 0,
+      districtID = 0,
+      blockID = 0,
+      gpID = 0,
+      level = 0
+    } = params;
+
+    try {
+      const [results] = await pool.query(
+        'CALL sp_PivotPropertyTypeWaste(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [month, year, fromDate, toDate, stateID, districtID, blockID, gpID, level]
+      );
+
+      return results[0];
+    } catch (error) {
+      console.error('Database error:', error);
+      throw new Error('Failed to fetch waste report');
+    }
+  }
 }
 
 module.exports = new WasteReportService();
