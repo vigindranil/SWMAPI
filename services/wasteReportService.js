@@ -78,6 +78,30 @@ class WasteReportService {
       throw new Error('Failed to fetch waste report');
     }
   }
+  async getWasteCollectiondashboard(params) {
+    const {
+ 
+      date = null,
+      stateID = 0,
+      districtID = 0,
+      blockID = 0,
+      gpID = 0,
+      villageID = 0,
+      type = 0
+    } = params;
+
+    try {
+      const [results] = await pool.query(
+        'CALL sp_WasteDashboardCounts(?, ?, ?, ?, ?, ?,?)',
+        [date, stateID, districtID, blockID, gpID, villageID, type]
+      );
+
+      return results[0];
+    } catch (error) {
+      console.error('Database error:', error);
+      throw new Error('Failed to fetch waste report');
+    }
+  }
 }
 
 module.exports = new WasteReportService();
